@@ -1,0 +1,146 @@
+html {
+  width: 60%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  font-size: 16px;
+  background-color: #ffffff;
+}
+
+.table thead th {
+  vertical-align: top;
+}
+
+.msg {
+  color: gray;
+  margin-bottom: 10px;
+}
+
+.db-sec {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 2px solid rgb(192, 191, 191);
+}
+
+table {
+  overflow: scroll;
+}
+
+.od-cell .od-item {
+  text-align: left;
+  font-size: 13px;
+}
+
+.file-log-wrapper,
+.view-panel-wrapper {
+  max-height: 280px;
+  max-width: 99%;
+  overflow: auto;
+  display: inline-block;
+}
+
+.gpx-sec {
+  margin-top: 20px;
+}
+
+.my-wp-adder {
+  width: 40px;
+  cursor: pointer;
+  border-radius: 60%;
+  text-align: center;
+  background-color: rgb(69, 202, 64);
+}
+
+.route-sec {
+  padding-left: 10px;
+}
+
+.del-component {
+  margin-left: 88px;
+  margin-bottom: 5px;
+}
+
+.section {
+  margin-top: 50px;
+  border: 3px solid rgb(184, 184, 184);
+  padding: 20px 20px;
+}
+
+table {
+  max-width: 80%;
+}
+
+td {
+  max-width: 100px;
+  overflow: scroll;
+}
+
+.name-cell {
+  text-align: left;
+  min-width: 200px;
+}
+
+body {
+  /* height: 100%; */
+  margin: 0 auto;
+  padding-top: 100px;
+  padding-bottom: 200px;
+  line-height: 1.75;
+  background-color: #ffffff;
+}
+a:link:hover {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.file-upload-button {
+  cursor: pointer;
+}
+
+td,
+th {
+  vertical-align: center;
+  text-align: center;
+}
+
+th {
+  font-size: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+.show-od {
+  cursor: pointer;
+  color: blue;
+}
+
+input[type="submit"],
+input[type="file"],
+button {
+  cursor: pointer;
+  cursor: hand;
+}
+@media (max-width: 900px) {
+  html {
+    font-size: 14px !important;
+    width: 80% !important;
+  }
+}
+@media (max-width: 480px) {
+  html {
+    font-size: 12px !important;
+    width: 90% !important;
+  }
+}
+@media (max-width: 320px) {
+  html {
+    font-size: 12px !important;
+    width: 100% !important;
+  }
+}

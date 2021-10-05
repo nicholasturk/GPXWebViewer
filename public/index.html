@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>GPX Data Viewer</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="CHANGE ME" />
+    <meta name="keywords" content="CHANGE ME" />
+    <meta name="author" content="CHANGE ME" />
+    <!-- Load jquery, bootstrap -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <!-- Custom CSS End -->
+  </head>
+  <body>
+    <h1 class="mb-4">GPX File Viewer and Uploader</h1>
+    <div class="file-log section">
+      <h4>File-logs</h4>
+      <div class="file-log-wrapper">
+        <table class="table border" id="file-log-table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">File name (click to download)</th>
+              <th scope="col">Version</th>
+              <th scope="col">Creator</th>
+              <th scope="col">Number of waypoints</th>
+              <th scope="col">Number of routes</th>
+              <th scope="col">Number of tracks</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <form
+        class="mt-4"
+        ref="uploadForm"
+        id="uploadForm"
+        enctype="multipart/form-data"
+      >
+        <div class="form-group">
+          <label class="file-upload-button"> </label>
+          <input
+            id="fileUpload"
+            type="file"
+            class="border-bottom pb-2"
+            name="uploadFile"
+          />
+          <input
+            type="submit"
+            value="Submit"
+            class="btn btn-success d-block mt-2 ml-1"
+          />
+        </div>
+      </form>
+    </div>
+
+    <div class="view-panel section">
+      <h4>View-panel</h4>
+      <select name="files" class="mb-2 d-block file-dropdown vp-file-dropdown">
+        <option value="None"></option>
+      </select>
+
+      <div class="view-panel-wrapper">
+        <table class="table border" id="view-panel-table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Component</th>
+              <th scope="col">Name</th>
+              <th scope="col">Number of points</th>
+              <th scope="col">Length</th>
+              <th scope="col">Loop</th>
+              <th scope="col">Other Data</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+    <div id="routeAdding" class="section">
+      <h4>Add route to existing file</h4>
+      <button class="btn btn-sm btn-success mb-2 add-route-btn">
+        Add Route
+      </button>
+      <div id="add-route-wrapper" class="hidden">
+        <form action="/addRoute" method="post" id="addRoute">
+          <select name="fileName" class="mb-2 file-dropdown"> </select>
+          <div for=""><b>Name:</b></div>
+          <input
+            type="text"
+            placeholder="Name"
+            name="routeName"
+            class="d-block"
+            required
+          />
+          <div for=""><b>Waypoints:</b></div>
+          <div id="waypoints-list">
+            <div>
+              <input
+                type="number"
+                name="waypoints[][lat]"
+                placeholder="Latitude"
+                step="any"
+                required
+              />
+              <input
+                class="mb-2"
+                type="number"
+                name="waypoints[][lon]"
+                placeholder="Longitude"
+                step="any"
+                required
+              /><button
+                style="width:30px;"
+                class="mb-1 pb-2 w-10 ml-1 btn btn-danger btn-sm del-wp"
+              >
+                x
+              </button>
+            </div>
+          </div>
+          <div style="width:40px;" class="btn pb-2 btn-primary btn-sm add-wp">
+            +
+          </div>
+          <button type="submit" class="btn d-block mt-2 btn-success">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="create-gpx" class="section">
+      <h4>Create .gpx file</h4>
+      <button class="btn btn-sm btn-success mb-2 add-gpx-btn">
+        Add GPX
+      </button>
+      <div id="add-gpx-wrapper" class="hidden">
+        <form
+          action="/createGPX"
+          enctype="multipart/form-data"
+          method="post"
+          id="addGPX"
+        >
+          <div for=""><b>File name:</b></div>
+          <input
+            type="text"
+            placeholder="Filename"
+            name="fileName"
+            class="d-block mb-2"
+            required
+          />
+          <div for=""><b>Creator:</b></div>
+          <input
+            type="text"
+            placeholder="Creator"
+            name="creator"
+            class="d-block mb-2"
+            required
+          />
+          <div for=""><b>Version:</b></div>
+          <input
+            type="number"
+            step="any"
+            placeholder="Version"
+            name="version"
+            class="d-block mb-2"
+            required
+          />
+          <div for=""><b>Namespace:</b></div>
+          <input
+            type="text"
+            step="any"
+            placeholder="Namespace"
+            name="namespace"
+            class="d-block mb-2"
+            required
+          />
+          <button type="Submit" class="btn btn-success btn-sm">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="file-path-between" class="section">
+      <h4>Find path between</h4>
+      <button class="btn btn-sm btn-success mb-2 find-path-btn">
+        Find path
+      </button>
+      <div id="find-path-wrapper" class="hidden">
+        <form
+          action="/findPath"
+          enctype="multipart/form-data"
+          method="post"
+          id="findPath"
+        >
+          <div for=""><b>Start:</b></div>
+          <input
+            type="number"
+            step="any"
+            placeholder="Latitude"
+            name="lat1"
+            class="d-block mb-2"
+            required
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder="Longitude"
+            name="lon1"
+            class="d-block mb-2"
+            required
+          />
+          <div for=""><b>End:</b></div>
+          <input
+            type="number"
+            step="any"
+            placeholder="Latitude"
+            name="lat2"
+            class="d-block mb-2"
+            required
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder="Longitude"
+            name="lon2"
+            class="d-block mb-2"
+            required
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder="Accuracy threshold"
+            name="delta"
+            class="d-block mb-2"
+            required
+          />
+          <button type="Submit" class="btn btn-success btn-sm">Submit</button>
+        </form>
+        <div style="overflow: scroll;">
+          <table class="table border mt-3" id="find-path-table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Filename</th>
+                <th scope="col">Component</th>
+                <th scope="col">Name</th>
+                <th scope="col">Number of points</th>
+                <th scope="col">Length</th>
+                <th scope="col">Loop</th>
+                <th scope="col">Other Data</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4 class="loggedIn">Login to db</h4>
+      <form enctype="multipart/form-data" method="post" id="loginForm">
+        <div for=""><b>Username:</b></div>
+        <input
+          type="text"
+          placeholder="Username"
+          name="user"
+          class="d-block mb-2"
+          required
+        />
+        <div for=""><b>Password:</b></div>
+        <input
+          type="text"
+          placeholder="Password"
+          name="pass"
+          class="d-block mb-2"
+          required
+        />
+        <div for=""><b>Database:</b></div>
+        <input
+          type="text"
+          placeholder="Database"
+          name="db"
+          class="d-block mb-2"
+          required
+        />
+        <button type="Submit" class="btn btn-success btn-sm">Submit</button>
+      </form>
+      <div class="is-logged-in hidden row mt-4 border-top pt-3 pb-2">
+        <div class="col-4 border-right">
+          <h6>Store all files</h6>
+          <button id="store-all-files" class="btn btn-success btn-sm">
+            Go
+          </button>
+        </div>
+        <div class="col-4 border-right">
+          <h6>Clear all data</h6>
+          <button id="clear-all-data" class="btn btn-success btn-sm">
+            Go
+          </button>
+        </div>
+        <div class="col-4">
+          <h6>Display DB Status</h6>
+          <button id="display-db-status" class="btn btn-success btn-sm">
+            Go
+          </button>
+        </div>
+      </div>
+      <div class="row border-top pt-3 is-logged-in ">
+        <div class="col-12">
+          <form id="query-form">
+            <h5>Queries</h5>
+            <div class="query-wrapper">
+              Select query:
+              <select name="query" id="query-select" class="mb-2">
+                <option value="0"></option>
+                <option value="1">Display all routes</option>
+                <option value="2">Display all routes from file</option>
+                <option value="3">Display all points from route</option>
+                <option value="4">Display all points from file</option>
+                <option value="5">Shortest Route from file</option>
+              </select>
+              <div class="file-query-wrapper hidden">
+                Select file:
+                <select name="files" class="mb-2 file-dropdown query-files">
+                  <option value="None"></option>
+                </select>
+              </div>
+              <div class="route-query-wrapper hidden">
+                Select route:
+                <select name="files" class="mb-2 route-dropdown query-files">
+                </select>
+              </div>
+              <div class="sort-by-rts hidden">
+                sort-by:
+                <select name="files" class="mb-2 sort-by-rts-q">
+                  <option value="none">None</option>
+                  <option value="route_name">route_name</option>
+                  <option value="route_len">route_len</option>
+                </select>
+              </div>
+              <div class="sort-by-pts hidden">
+                sort-by:
+                <select name="files" class="mb-2 sort-by-pts-q">
+                  <option value="none">None</option>
+                  <option value="point_name">point_name</option>
+                </select>
+              </div>
+              <div class="sort-by-lonshor hidden">
+                Longest or shortest:
+                <select name="files" class="mb-2 lors-q" required>
+                  <option value="Longest">Longest</option>
+                  <option value="Shortest">Shortest</option>
+                </select>
+                <div>
+                  Number of routes to display:
+                  <input
+                    type="number"
+                    value="1"
+                    class="w-25"
+                    id="5-n"
+                    min="1"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  id="query-submit"
+                  class="btn btn-sm btn-success hidden mb-2"
+                >
+                  Go
+                </button>
+              </div>
+            </div>
+          </form>
+          <h4 id="secdata"></h4>
+          <table class="table border">
+            <thead class="thead-dark query-header"></thead>
+            <tbody class="query-data"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="/index.js"></script>
+  </body>
+</html>

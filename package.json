@@ -1,0 +1,25 @@
+{
+  "name": "a3",
+  "version": "1.0.1",
+  "description": "CIS2750 F20 - A3",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "debug": "nodemon --inspect app.js 35070"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "ffi-napi": "^3.1.0",
+    "http": "0.0.1-security",
+    "javascript-obfuscator": "^2.6.1",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.5",
+    "ref-array-di": "^1.2.2",
+    "ref-napi": "^3.0.2",
+    "ref-struct-napi": "^1.1.1"
+  }
+}
